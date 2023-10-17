@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Button } from '@radix-ui/themes';
 
 type Props = {};
@@ -5,7 +7,9 @@ type Props = {};
 function IssuesPage({}: Props) {
   return (
     <div>
-      <Button>New Issue</Button>
+      <Link href='/issues/new'>
+        <Button>New Issue</Button>
+      </Link>
     </div>
   );
 }
