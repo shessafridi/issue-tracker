@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { AiFillBug } from 'react-icons/ai';
 
+import NavLink from './NavLink';
+
 type Props = {};
 
 const links = [
@@ -23,12 +25,7 @@ const NavBar = (props: Props) => {
       <ul className='flex space-x-6'>
         {links.map(link => (
           <li key={link.href}>
-            <Link
-              className='text-zinc-500 hover:text-zinc-800 transition-colors'
-              href={link.href}
-            >
-              {link.label}
-            </Link>
+            <NavLink href={link.href} label={link.label} />
           </li>
         ))}
       </ul>
