@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
+import '@radix-ui/themes/styles.css';
 import './globals.css';
 
 import { Lato } from 'next/font/google';
+
+import { Theme } from '@radix-ui/themes';
 
 import NavBar from './NavBar';
 
@@ -20,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <NavBar />
-        <main>{children}</main>
+        <Theme>
+          <NavBar />
+          <main>{children}</main>
+        </Theme>
       </body>
     </html>
   );
