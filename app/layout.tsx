@@ -1,14 +1,18 @@
 import type { Metadata } from 'next';
 import '@radix-ui/themes/styles.css';
+import './theme.config.css';
 import './globals.css';
 
-import { Lato } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 import { Theme } from '@radix-ui/themes';
 
 import NavBar from './NavBar';
 
-const inter = Lato({ weight: ['400', '700', '300'], subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,8 +26,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
-        <Theme>
+      <body className={inter.variable} suppressHydrationWarning>
+        <Theme appearance='light' accentColor='violet'>
           <NavBar />
           <main className='p-5'>{children}</main>
         </Theme>
