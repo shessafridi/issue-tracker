@@ -11,6 +11,7 @@ import SimpleMDE from 'react-simplemde-editor';
 import z from 'zod';
 
 import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 import { createIssueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -27,25 +28,25 @@ function NewIssuePage({}: Props) {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<IssueForm>({
     resolver: zodResolver(createIssueSchema),
   });
 
   const [error, setError] = useState('');
 
+  const onSubmit = handleSubmit(async data => {
+    try {
+      await axios.post('/api/issues', data);
+      router.push('/issues');
+    } catch (error) {
+      setError('An unexpected error occured.');
+    }
+  });
+
   return (
-    <form
-      className='max-w-xl space-y-3'
-      onSubmit={handleSubmit(async data => {
-        try {
-          await axios.post('/api/issues', data);
-          router.push('/issues');
-        } catch (error) {
-          setError('An unexpected error occured.');
-        }
-      })}
-    >
+    <form className='max-w-xl space-y-3' onSubmit={onSubmit}>
       {error && (
         <CalloutRoot color='red'>
           <CalloutIcon>
@@ -68,7 +69,13 @@ function NewIssuePage({}: Props) {
       />
       <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-      <Button>Submit New Issue</Button>
+      <Button
+        color={isSubmitSuccessful ? 'green' : undefined}
+        disabled={isSubmitting && isSubmitSuccessful}
+      >
+        {isSubmitSuccessful ? 'Successful' : 'Submit New Issue'}
+        {isSubmitting && <Spinner className='h-4 w-4 border-2' />}
+      </Button>
     </form>
   );
 }
