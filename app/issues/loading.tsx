@@ -1,22 +1,18 @@
-import delay from 'delay';
-import Link from 'next/link';
+import 'react-loading-skeleton/dist/skeleton.css';
 
-import prisma from '@/prisma/client';
+import Skeleton from 'react-loading-skeleton';
+
 import {
     TableBody, TableCell, TableColumnHeaderCell, TableHeader, TableRoot, TableRow,
     TableRowHeaderCell
 } from '@radix-ui/themes';
 
-import IssueStatusBadge from '../components/IssueStatusBadge';
 import IssueActions from './IssueActions';
 
 type Props = {};
 
-async function IssuesPage({}: Props) {
-  const issues = await prisma.issue.findMany();
-
-  await delay(1000);
-
+function LoadingIssuesPage({}: Props) {
+  const issues = [1, 2, 3, 4, 5];
   return (
     <div>
       <IssueActions />
@@ -36,18 +32,18 @@ async function IssuesPage({}: Props) {
 
         <TableBody>
           {issues.map(issue => (
-            <TableRow key={issue.id}>
+            <TableRow key={issue}>
               <TableRowHeaderCell>
-                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
+                <Skeleton />
                 <div className='block md:hidden'>
-                  <IssueStatusBadge status={issue.status} />
+                  <Skeleton />
                 </div>
               </TableRowHeaderCell>
               <TableCell className='hidden md:table-cell'>
-                <IssueStatusBadge status={issue.status} />
+                <Skeleton />
               </TableCell>
               <TableCell className='hidden md:table-cell'>
-                {issue.createdAt.toLocaleString()}
+                <Skeleton />
               </TableCell>
             </TableRow>
           ))}
@@ -57,4 +53,4 @@ async function IssuesPage({}: Props) {
   );
 }
 
-export default IssuesPage;
+export default LoadingIssuesPage;
