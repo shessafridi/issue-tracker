@@ -10,10 +10,11 @@ import { BiErrorCircle } from 'react-icons/bi';
 import SimpleMDE from 'react-simplemde-editor';
 import z from 'zod';
 
+import ErrorMessage from '@/app/components/ErrorMessage';
 import { createIssueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-    Button, CalloutIcon, CalloutRoot, CalloutText, Text, TextFieldInput, TextFieldRoot
+    Button, CalloutIcon, CalloutRoot, CalloutText, TextFieldInput, TextFieldRoot
 } from '@radix-ui/themes';
 
 type IssueForm = z.infer<typeof createIssueSchema>;
@@ -56,11 +57,7 @@ function NewIssuePage({}: Props) {
       <TextFieldRoot>
         <TextFieldInput placeholder='Title' {...register('title')} />
       </TextFieldRoot>
-      {errors.title && (
-        <Text color='red' as='p'>
-          {errors.title.message}
-        </Text>
-      )}
+      <ErrorMessage>{errors.title?.message}</ErrorMessage>
 
       <Controller
         name='description'
@@ -69,11 +66,7 @@ function NewIssuePage({}: Props) {
           <SimpleMDE placeholder='Description' {...field} />
         )}
       />
-      {errors.description && (
-        <Text color='red' as='p'>
-          {errors.description.message}
-        </Text>
-      )}
+      <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
       <Button>Submit New Issue</Button>
     </form>
