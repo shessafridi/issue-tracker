@@ -1,6 +1,6 @@
 import delay from 'delay';
-import Link from 'next/link';
 
+import Link from '@/app/components/Link';
 import prisma from '@/prisma/client';
 import {
     TableBody, TableCell, TableColumnHeaderCell, TableHeader, TableRoot, TableRow,
