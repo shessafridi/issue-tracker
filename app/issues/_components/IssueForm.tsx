@@ -11,7 +11,7 @@ import { BiErrorCircle } from 'react-icons/bi';
 import z from 'zod';
 
 import { ErrorMessage, Spinner } from '@/app/components';
-import { createIssueSchema } from '@/app/validationSchemas';
+import { issueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from '@prisma/client';
 import {
@@ -27,7 +27,7 @@ const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
 
-type IssueFormData = z.infer<typeof createIssueSchema>;
+type IssueFormData = z.infer<typeof issueSchema>;
 
 function IssueForm({ issue }: { issue?: Issue }) {
   const router = useRouter();
@@ -38,7 +38,7 @@ function IssueForm({ issue }: { issue?: Issue }) {
 
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<IssueFormData>({
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
   });
 
   const [error, setError] = useState('');
