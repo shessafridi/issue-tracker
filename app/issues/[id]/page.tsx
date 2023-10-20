@@ -1,3 +1,4 @@
+import delay from 'delay';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 
@@ -11,6 +12,8 @@ async function IssueDetailPage({ params: { id } }: Props) {
   const issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
 
   if (!issue) return notFound();
+
+  await delay(1000);
 
   return (
     <div>
