@@ -1,10 +1,11 @@
 import delay from 'delay';
 import { notFound } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
 
-import { IssueStatusBadge } from '@/app/components';
 import prisma from '@/prisma/client';
-import { Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Box, Grid } from '@radix-ui/themes';
+
+import EditIssueButton from './EditIssueButton';
+import IssueDetails from './IssueDetails';
 
 type Props = { params: { id: string } };
 
@@ -16,18 +17,14 @@ async function IssueDetailPage({ params: { id } }: Props) {
   await delay(1000);
 
   return (
-    <div>
-      <Heading>{issue.title}</Heading>
-      <Flex gap='3' my='2'>
-        <IssueStatusBadge status={issue.status} />
-        <Text className='text-gray-600 text-sm'>
-          {issue.createdAt.toDateString()}
-        </Text>
-      </Flex>
-      <Card className='prose mt-4'>
-        <ReactMarkdown>{issue.description}</ReactMarkdown>
-      </Card>
-    </div>
+    <Grid columns={{ initial: '1', md: '2' }} gap='5'>
+      <Box>
+        <IssueDetails issue={issue} />
+      </Box>
+      <Box>
+        <EditIssueButton issueId={issue.id} />
+      </Box>
+    </Grid>
   );
 }
 
