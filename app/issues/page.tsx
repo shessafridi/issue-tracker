@@ -61,4 +61,6 @@ async function IssuesPage({}: Props) {
   );
 }
 
+export const dynamic = 'force-dynamic';
+
 export default IssuesPage;
