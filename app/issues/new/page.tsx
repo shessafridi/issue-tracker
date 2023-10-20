@@ -3,11 +3,11 @@
 import 'easymde/dist/easymde.min.css';
 
 import axios from 'axios';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { BiErrorCircle } from 'react-icons/bi';
-import SimpleMDE from 'react-simplemde-editor';
 import z from 'zod';
 
 import ErrorMessage from '@/app/components/ErrorMessage';
@@ -22,6 +22,10 @@ import {
   TextFieldInput,
   TextFieldRoot,
 } from '@radix-ui/themes';
+
+const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
+  ssr: false,
+});
 
 type IssueForm = z.infer<typeof createIssueSchema>;
 
@@ -68,17 +72,16 @@ function NewIssuePage({}: Props) {
       <Controller
         name='description'
         control={control}
-        render={({ field }) => (
-          <SimpleMDE placeholder='Description' {...field} />
+        render={({ field: { ref, ...others } }) => (
+          <Suspense>
+            <SimpleMDE placeholder='Description' {...others} />
+          </Suspense>
         )}
       />
       <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-      <Button
-        color={isSubmitSuccessful ? 'green' : undefined}
-        disabled={isSubmitting && isSubmitSuccessful}
-      >
-        {isSubmitSuccessful ? 'Successful' : 'Submit New Issue'}
+      <Button disabled={isSubmitting}>
+        Submit New Issue
         {isSubmitting && <Spinner className='h-4 w-4 border-2' />}
       </Button>
     </form>
