@@ -1,4 +1,4 @@
-import Skeleton from '@/app/components/Skeleton';
+import { Skeleton } from '@/app/components';
 import { Box } from '@radix-ui/themes';
 
 type Props = {};

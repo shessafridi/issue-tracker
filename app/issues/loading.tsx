@@ -1,7 +1,12 @@
-import Skeleton from '@/app/components/Skeleton';
+import { Skeleton } from '@/app/components';
 import {
-    TableBody, TableCell, TableColumnHeaderCell, TableHeader, TableRoot, TableRow,
-    TableRowHeaderCell
+  TableBody,
+  TableCell,
+  TableColumnHeaderCell,
+  TableHeader,
+  TableRoot,
+  TableRow,
+  TableRowHeaderCell,
 } from '@radix-ui/themes';
 
 import IssueActions from './IssueActions';

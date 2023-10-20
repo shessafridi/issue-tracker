@@ -1,13 +1,17 @@
 import delay from 'delay';
 
-import Link from '@/app/components/Link';
+import { IssueStatusBadge, Link } from '@/app/components';
 import prisma from '@/prisma/client';
 import {
-    TableBody, TableCell, TableColumnHeaderCell, TableHeader, TableRoot, TableRow,
-    TableRowHeaderCell
+  TableBody,
+  TableCell,
+  TableColumnHeaderCell,
+  TableHeader,
+  TableRoot,
+  TableRow,
+  TableRowHeaderCell,
 } from '@radix-ui/themes';
 
-import IssueStatusBadge from '../components/IssueStatusBadge';
 import IssueActions from './IssueActions';
 
 type Props = {};
