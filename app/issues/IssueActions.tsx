@@ -8,7 +8,7 @@ type Props = {};
 
 function IssueActions({}: Props) {
   return (
-    <Flex justify='between' className='mb-5'>
+    <Flex justify='between'>
       <IssueStatusFilter />
       <Link href='/issues/new'>
         <Button>New Issue</Button>
