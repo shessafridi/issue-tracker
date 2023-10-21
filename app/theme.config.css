@@ -1,4 +1,5 @@
 div.radix-themes {
   --default-font-family: var(--font-inter);
   --cursor-button: pointer;
+  --cursor-menu-item: pointer;
 }

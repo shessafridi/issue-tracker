@@ -37,7 +37,6 @@ const NavBar = (props: Props) => {
             </ul>
           </Flex>
           <Box>
-            {' '}
             <NavBarAuthLinks />
           </Box>
         </Flex>
