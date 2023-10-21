@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Status } from '@prisma/client';
 import {
   SelectContent,
@@ -18,8 +20,15 @@ const statuses: { label: string; value?: Status }[] = [
 type Props = {};
 
 function IssueStatusFilter({}: Props) {
+  const router = useRouter();
+
   return (
-    <SelectRoot value='all'>
+    <SelectRoot
+      onValueChange={status => {
+        const query = status && status !== 'all' ? `?status=${status}` : '';
+        router.push(`/issues${query}`);
+      }}
+    >
       <SelectTrigger placeholder='Filter by status...' />
       <SelectContent>
         {statuses.map(status => (

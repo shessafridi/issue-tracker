@@ -1,7 +1,9 @@
-import delay from 'delay';
+import NextLink from 'next/link';
 
 import { IssueStatusBadge, Link } from '@/app/components';
 import prisma from '@/prisma/client';
+import { Issue, Status } from '@prisma/client';
+import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
 import {
   TableBody,
   TableCell,
@@ -14,12 +16,37 @@ import {
 
 import IssueActions from './IssueActions';
 
-type Props = {};
+type Props = {
+  searchParams: {
+    status?: Status;
+    orderBy?: keyof Issue;
+    sortOrder?: 'asc' | 'desc';
+  };
+};
 
-async function IssuesPage({}: Props) {
-  const issues = await prisma.issue.findMany();
+async function IssuesPage({ searchParams }: Props) {
+  const statuses = Object.values(Status);
 
-  await delay(1000);
+  const status = statuses.includes(searchParams.status!)
+    ? searchParams.status
+    : undefined;
+
+  const sortOrder = searchParams.sortOrder === 'desc' ? 'desc' : 'asc';
+
+  const issues = await prisma.issue.findMany({
+    where: { status: status },
+    orderBy: searchParams.orderBy
+      ? {
+          [searchParams.orderBy!]: sortOrder,
+        }
+      : undefined,
+  });
+
+  const columns: { value: keyof Issue; label: string; className?: string }[] = [
+    { label: 'Issue', value: 'title' },
+    { label: 'Status', value: 'status', className: 'hidden md:table-cell' },
+    { label: 'Created', value: 'createdAt', className: 'hidden md:table-cell' },
+  ];
 
   return (
     <div>
@@ -28,13 +55,32 @@ async function IssuesPage({}: Props) {
       <TableRoot variant='surface'>
         <TableHeader>
           <TableRow>
-            <TableColumnHeaderCell>Issue</TableColumnHeaderCell>
-            <TableColumnHeaderCell className='hidden md:table-cell'>
-              Status
-            </TableColumnHeaderCell>
-            <TableColumnHeaderCell className='hidden md:table-cell'>
-              Created
-            </TableColumnHeaderCell>
+            {columns.map(column => (
+              <TableColumnHeaderCell key={column.value}>
+                <NextLink
+                  href={{
+                    query: {
+                      ...searchParams,
+                      orderBy: column.value,
+                      sortOrder:
+                        column.value === searchParams.orderBy
+                          ? sortOrder === 'asc'
+                            ? 'desc'
+                            : 'asc'
+                          : 'asc',
+                    },
+                  }}
+                >
+                  {column.label}
+                </NextLink>
+                {column.value === searchParams.orderBy &&
+                  (sortOrder === 'asc' ? (
+                    <ArrowUpIcon className='inline-block ml-1' />
+                  ) : (
+                    <ArrowDownIcon className='inline-block ml-1' />
+                  ))}
+              </TableColumnHeaderCell>
+            ))}
           </TableRow>
         </TableHeader>
 
