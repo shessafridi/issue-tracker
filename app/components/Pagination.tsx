@@ -1,3 +1,7 @@
+'use client';
+
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -15,6 +19,16 @@ type Props = {
 function Pagination({ currentPage, itemCount, pageSize }: Props) {
   const pageCount = Math.ceil(itemCount / pageSize);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const changePage = (page: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+
+    router.push('?' + params.toString());
+  };
+
   if (pageCount < 2) return null;
 
   return (
@@ -23,12 +37,22 @@ function Pagination({ currentPage, itemCount, pageSize }: Props) {
         Page {currentPage} of {pageCount}
       </Text>
       <Tooltip content='First page'>
-        <Button color='gray' variant='soft' disabled={currentPage === 1}>
+        <Button
+          color='gray'
+          variant='soft'
+          onClick={() => changePage(1)}
+          disabled={currentPage === 1}
+        >
           <DoubleArrowLeftIcon />
         </Button>
       </Tooltip>
       <Tooltip content='Back'>
-        <Button color='gray' variant='soft' disabled={currentPage === 1}>
+        <Button
+          color='gray'
+          variant='soft'
+          onClick={() => changePage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
           <ChevronLeftIcon />
         </Button>
       </Tooltip>
@@ -36,6 +60,7 @@ function Pagination({ currentPage, itemCount, pageSize }: Props) {
         <Button
           color='gray'
           variant='soft'
+          onClick={() => changePage(currentPage + 1)}
           disabled={currentPage === pageCount}
         >
           <ChevronRightIcon />
@@ -45,6 +70,7 @@ function Pagination({ currentPage, itemCount, pageSize }: Props) {
         <Button
           color='gray'
           variant='soft'
+          onClick={() => changePage(pageCount)}
           disabled={currentPage === pageCount}
         >
           <DoubleArrowRightIcon />
