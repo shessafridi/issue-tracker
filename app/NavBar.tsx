@@ -1,23 +1,26 @@
+'use client';
+
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { AiFillBug } from 'react-icons/ai';
 
-import { Box, Container, Flex } from '@radix-ui/themes';
-
-import NavBarAuthLinks from './NavBarAuthLinks';
-import NavLink from './NavLink';
+import { Skeleton } from '@/app/components';
+import { cn } from '@/lib/utils';
+import {
+  Avatar,
+  Box,
+  Container,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  Flex,
+  Text,
+} from '@radix-ui/themes';
 
 type Props = {};
-
-const links = [
-  {
-    label: 'Dashboard',
-    href: '/',
-  },
-  {
-    label: 'Issues',
-    href: '/issues',
-  },
-];
 
 const NavBar = (props: Props) => {
   return (
@@ -28,21 +31,91 @@ const NavBar = (props: Props) => {
             <Link className='text-2xl text-zinc-800' href='/'>
               <AiFillBug />
             </Link>
-            <ul className='flex space-x-6'>
-              {links.map(link => (
-                <li key={link.href}>
-                  <NavLink href={link.href} label={link.label} />
-                </li>
-              ))}
-            </ul>
+            <NavLinks />
           </Flex>
-          <Box>
-            <NavBarAuthLinks />
-          </Box>
+          <AuthStatus />
         </Flex>
       </Container>
     </nav>
   );
+};
+
+const NavLinks = () => {
+  const currentPath = usePathname();
+
+  const links = [
+    {
+      label: 'Dashboard',
+      href: '/',
+    },
+    {
+      label: 'Issues',
+      href: '/issues',
+    },
+  ];
+
+  return (
+    <ul className='flex space-x-6'>
+      {links.map(link => (
+        <li key={link.href}>
+          <Link
+            className={cn(
+              'nav-link',
+              currentPath === link.href && 'text-zinc-900'
+            )}
+            href={link.href}
+          >
+            {link.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+const AuthStatus = () => {
+  const session = useSession();
+
+  const user = session.data?.user;
+
+  if (session.status === 'loading')
+    return <Skeleton height='1.5rem' width='3rem' />;
+
+  if (session.status === 'unauthenticated')
+    return (
+      <Link className='nav-link' href='/api/auth/signin'>
+        Login
+      </Link>
+    );
+
+  if (session.status === 'authenticated') {
+    return (
+      <Box>
+        <DropdownMenuRoot>
+          <DropdownMenuTrigger>
+            <Avatar
+              className='cursor-pointer'
+              size='2'
+              radius='full'
+              fallback='?'
+              src={user?.image!}
+              referrerPolicy='no-referrer'
+            />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>
+              <Text size='2'>{user!.email}</Text>
+            </DropdownMenuLabel>
+            <Link href='/api/auth/signout'>
+              <DropdownMenuItem>Log out</DropdownMenuItem>
+            </Link>
+          </DropdownMenuContent>
+        </DropdownMenuRoot>
+      </Box>
+    );
+  }
+
+  return null;
 };
 
 export default NavBar;
