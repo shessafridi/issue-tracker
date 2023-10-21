@@ -5,7 +5,7 @@ import { Button } from '@radix-ui/themes';
 
 function EditIssueButton({ issueId }: { issueId: string }) {
   return (
-    <Link href={`/issues/${issueId}/edit`}>
+    <Link className='contents' href={`/issues/${issueId}/edit`}>
       <Button>
         <Pencil2Icon />
         Edit Issue
