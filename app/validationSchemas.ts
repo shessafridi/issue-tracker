@@ -7,9 +7,10 @@ export const issueSchema = z.object({
 
 export const patchIssueSchema = z
   .object({
-    assignedToId: z
+    assignedToUserId: z
       .string()
-      .regex(/^[0-9a-fA-F]{24}$/, 'Must be a valid Object ID'),
+      .regex(/^[0-9a-fA-F]{24}$/, 'Must be a valid Object ID')
+      .nullable(),
   })
   .merge(issueSchema)
   .partial()
