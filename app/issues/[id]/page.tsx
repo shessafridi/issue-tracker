@@ -10,7 +10,7 @@ import IssueDetails from './IssueDetails';
 type Props = { params: { id: string } };
 
 async function IssueDetailPage({ params: { id } }: Props) {
-  const issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
+  const issue = await prisma.issue.findUnique({ where: { id: id } });
 
   if (!issue) return notFound();
 

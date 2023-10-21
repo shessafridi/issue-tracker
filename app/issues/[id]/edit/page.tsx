@@ -8,7 +8,7 @@ type Props = {
 };
 
 async function EditPage({ params: { id } }: Props) {
-  const issue = await prisma.issue.findUnique({ where: { id: parseInt(id) } });
+  const issue = await prisma.issue.findUnique({ where: { id: id } });
 
   if (!issue) notFound();
 
