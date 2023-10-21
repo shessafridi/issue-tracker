@@ -9,7 +9,7 @@ import { BiErrorCircle } from 'react-icons/bi';
 import SimpleMDE from 'react-simplemde-editor';
 import z from 'zod';
 
-import { ErrorMessage, Spinner } from '@/app/components';
+import { ButtonSpinner, ErrorMessage } from '@/app/components';
 import { issueSchema } from '@/app/validationSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from '@prisma/client';
@@ -82,7 +82,7 @@ function IssueForm({ issue }: { issue?: Issue }) {
 
       <Button disabled={isSubmitting}>
         {issue ? 'Update Issue' : 'Submit New Issue'}{' '}
-        {isSubmitting && <Spinner className='h-4 w-4 border-2' />}
+        {isSubmitting && <ButtonSpinner />}
       </Button>
     </form>
   );
