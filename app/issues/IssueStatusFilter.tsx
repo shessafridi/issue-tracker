@@ -28,13 +28,10 @@ function IssueStatusFilter({}: Props) {
     <SelectRoot
       defaultValue={searchParams.get('status') || 'all'}
       onValueChange={status => {
-        const params = new URLSearchParams();
+        const params = new URLSearchParams(searchParams);
 
-        Array.from(searchParams.entries()).forEach(([key, value]) => {
-          params.set(key, value);
-        });
-
-        params.append('status', status);
+        params.set('status', status);
+        params.set('page', '1');
 
         if (status === 'all') params.delete('status');
 

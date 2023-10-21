@@ -5,6 +5,7 @@ import prisma from '@/prisma/client';
 import { Issue, Status } from '@prisma/client';
 import { ArrowDownIcon, ArrowUpIcon } from '@radix-ui/react-icons';
 import {
+  Box,
   TableBody,
   TableCell,
   TableColumnHeaderCell,
@@ -14,6 +15,7 @@ import {
   TableRowHeaderCell,
 } from '@radix-ui/themes';
 
+import Pagination from '../components/Pagination';
 import IssueActions from './IssueActions';
 
 type Props = {
@@ -21,6 +23,7 @@ type Props = {
     status?: Status;
     orderBy?: keyof Issue;
     sortOrder?: 'asc' | 'desc';
+    page?: string;
   };
 };
 
@@ -31,6 +34,8 @@ async function IssuesPage({ searchParams }: Props) {
     ? searchParams.status
     : undefined;
 
+  const where = { status };
+
   const sortOrder = searchParams.sortOrder === 'desc' ? 'desc' : 'asc';
 
   const columns: { value: keyof Issue; label: string; className?: string }[] = [
@@ -39,14 +44,28 @@ async function IssuesPage({ searchParams }: Props) {
     { label: 'Created', value: 'createdAt', className: 'hidden md:table-cell' },
   ];
 
+  const page = parseInt(searchParams.page!) || 1;
+  const pageSize = 10;
+
   const issues = await prisma.issue.findMany({
-    where: { status: status },
+    where,
     orderBy: columns.map(c => c.value).includes(searchParams.orderBy!)
       ? {
           [searchParams.orderBy!]: sortOrder,
         }
       : undefined,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+
+  const issueCount = await prisma.issue.count({ where });
+
+  const getNextSortOrder = (value: keyof Issue) =>
+    value === searchParams.orderBy
+      ? sortOrder === 'asc'
+        ? 'desc'
+        : 'asc'
+      : 'asc';
 
   return (
     <div>
@@ -62,12 +81,7 @@ async function IssuesPage({ searchParams }: Props) {
                     query: {
                       ...searchParams,
                       orderBy: column.value,
-                      sortOrder:
-                        column.value === searchParams.orderBy
-                          ? sortOrder === 'asc'
-                            ? 'desc'
-                            : 'asc'
-                          : 'asc',
+                      sortOrder: getNextSortOrder(column.value),
                     },
                   }}
                 >
@@ -103,6 +117,13 @@ async function IssuesPage({ searchParams }: Props) {
           ))}
         </TableBody>
       </TableRoot>
+      <Box mt='2'>
+        <Pagination
+          currentPage={page}
+          itemCount={issueCount}
+          pageSize={pageSize}
+        />
+      </Box>
     </div>
   );
 }
