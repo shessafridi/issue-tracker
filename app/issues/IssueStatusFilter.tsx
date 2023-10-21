@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Status } from '@prisma/client';
 import {
@@ -22,17 +22,30 @@ type Props = {};
 function IssueStatusFilter({}: Props) {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
   return (
     <SelectRoot
+      defaultValue={searchParams.get('status') || 'all'}
       onValueChange={status => {
-        const query = status && status !== 'all' ? `?status=${status}` : '';
-        router.push(`/issues${query}`);
+        const params = new URLSearchParams();
+
+        Array.from(searchParams.entries()).forEach(([key, value]) => {
+          params.set(key, value);
+        });
+
+        params.append('status', status);
+
+        if (status === 'all') params.delete('status');
+
+        const query = params.size ? '?' + params.toString() : '';
+        router.push('/issues/' + query);
       }}
     >
       <SelectTrigger placeholder='Filter by status...' />
       <SelectContent>
         {statuses.map(status => (
-          <SelectItem key={status.value} value={status.value || 'all'}>
+          <SelectItem key={status.label} value={status.value || 'all'}>
             {status.label}
           </SelectItem>
         ))}
