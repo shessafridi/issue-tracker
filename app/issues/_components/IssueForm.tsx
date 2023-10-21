@@ -1,13 +1,12 @@
 'use client';
-
 import 'easymde/dist/easymde.min.css';
 
 import axios from 'axios';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { BiErrorCircle } from 'react-icons/bi';
+import SimpleMDE from 'react-simplemde-editor';
 import z from 'zod';
 
 import { ErrorMessage, Spinner } from '@/app/components';
@@ -22,10 +21,6 @@ import {
   TextFieldInput,
   TextFieldRoot,
 } from '@radix-ui/themes';
-
-const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
-  ssr: false,
-});
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
