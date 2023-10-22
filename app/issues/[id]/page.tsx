@@ -2,6 +2,7 @@ import delay from 'delay';
 import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
 
 import authOptions from '@/app/api/auth/authOptions';
 import prisma from '@/prisma/client';
@@ -12,10 +13,14 @@ import DeleteIssueButton from './DeleteIssueButton';
 import EditIssueButton from './EditIssueButton';
 import IssueDetails from './IssueDetails';
 
+const fetchIssue = cache((issueId: string) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
+
 type Props = { params: { id: string } };
 
 async function IssueDetailPage({ params: { id } }: Props) {
-  const issue = await prisma.issue.findUnique({ where: { id: id } });
+  const issue = await fetchIssue(id);
 
   const session = await getServerSession(authOptions);
 
@@ -42,7 +47,7 @@ async function IssueDetailPage({ params: { id } }: Props) {
 }
 
 export async function generateMetadata({ params: { id } }: Props) {
-  const issue = await prisma.issue.findUnique({ where: { id: id } });
+  const issue = await fetchIssue(id);
 
   return {
     title: issue?.title || 'Issue',
