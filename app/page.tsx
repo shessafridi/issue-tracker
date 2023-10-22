@@ -1,6 +1,9 @@
 import prisma from '@/prisma/client';
+import { Box, Flex, Grid } from '@radix-ui/themes';
 
 import IssueChart from './IssueChart';
+import IssueSummary from './IssueSummary';
+import LatestIssues from './LatestIssues';
 
 export default async function Home() {
   const [open, inProgress, closed] = await Promise.all([
@@ -10,9 +13,14 @@ export default async function Home() {
   ]);
 
   return (
-    <div>
-      {/* <IssueSummary open={open} inProgress={inProgress} closed={closed} /> */}
-      <IssueChart open={open} inProgress={inProgress} closed={closed} />
-    </div>
+    <Grid columns={{ initial: '1', md: '2' }} gap='5'>
+      <Flex direction='column' gap='5'>
+        <IssueSummary open={open} inProgress={inProgress} closed={closed} />
+        <IssueChart open={open} inProgress={inProgress} closed={closed} />
+      </Flex>
+      <Box>
+        <LatestIssues />
+      </Box>
+    </Grid>
   );
 }
