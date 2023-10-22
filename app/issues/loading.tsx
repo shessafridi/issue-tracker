@@ -19,7 +19,7 @@ function LoadingIssuesPage({}: Props) {
     <div>
       <IssueActions />
 
-      <TableRoot variant='surface'>
+      <TableRoot className='mt-5' variant='surface'>
         <TableHeader>
           <TableRow>
             <TableColumnHeaderCell>Issue</TableColumnHeaderCell>

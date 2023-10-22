@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 
@@ -19,6 +20,15 @@ async function EditPage({ params: { id } }: Props) {
   if (!issue) notFound();
 
   return <IssueForm issue={issue} />;
+}
+
+export async function generateMetadata({ params: { id } }: Props) {
+  const issue = await prisma.issue.findUnique({ where: { id: id } });
+
+  return {
+    title: issue?.title ? `Edit issue - ${issue.title}` : 'Edit Issue',
+    description: 'Edit issue ' + issue?.id,
+  } as Metadata;
 }
 
 export default EditPage;

@@ -1,4 +1,5 @@
 import delay from 'delay';
+import { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { notFound } from 'next/navigation';
 
@@ -38,6 +39,15 @@ async function IssueDetailPage({ params: { id } }: Props) {
       )}
     </Grid>
   );
+}
+
+export async function generateMetadata({ params: { id } }: Props) {
+  const issue = await prisma.issue.findUnique({ where: { id: id } });
+
+  return {
+    title: issue?.title || 'Issue',
+    description: 'Details of issue ' + issue?.id,
+  } as Metadata;
 }
 
 export default IssueDetailPage;
