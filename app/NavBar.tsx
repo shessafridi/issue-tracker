@@ -24,9 +24,9 @@ type Props = {};
 
 const NavBar = (props: Props) => {
   return (
-    <nav className='bg-white flex border-b mb-5 px-5 h-14 items-center'>
+    <nav className='bg-white flex border-b mb-5 px-5 h-16 md:h-14 items-center'>
       <Container>
-        <Flex justify='between'>
+        <Flex justify='between' align='center'>
           <Flex gap='4'>
             <Link className='text-2xl text-zinc-800' href='/'>
               <AiFillBug />

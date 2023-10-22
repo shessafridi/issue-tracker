@@ -41,7 +41,10 @@ function IssueTable({ issues, searchParams }: Props) {
       <TableHeader>
         <TableRow>
           {columns.map(column => (
-            <TableColumnHeaderCell key={column.value}>
+            <TableColumnHeaderCell
+              key={column.value}
+              className={column.className}
+            >
               <NextLink
                 href={{
                   query: {
